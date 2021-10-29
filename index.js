@@ -63,7 +63,13 @@ async function run() {
            res.send(result);
       })
 
-
+//delete booking 
+      app.delete('/bookingDelete/:id', async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: ObjectId(id) };
+          const result = await Booking_info_collection.deleteOne(query);
+          res.json(result)
+      })
 
       
   } finally {
