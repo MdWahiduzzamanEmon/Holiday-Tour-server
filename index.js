@@ -46,9 +46,22 @@ async function run() {
           res.json(result)
       })
 
+//get booking api
+      app.get('/bookingInfo/:email', async (req, res) => {
+          const email = req.params.email;
+        //   console.log(email);
+          const query = { email: email };
+          const result = await Booking_info_collection.find(query).toArray();
+        // console.log(result);
 
+          res.send(result)
+      })
 
-
+//get all booking 
+      app.get('/bookingInfo', async (req, res) => {
+           const result = await tour_place_collection.find({}).toArray();
+           res.send(result);
+      })
 
 
 
