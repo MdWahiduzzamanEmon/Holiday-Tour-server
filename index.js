@@ -59,7 +59,7 @@ async function run() {
 
 //get all booking 
       app.get('/bookingInfo', async (req, res) => {
-           const result = await tour_place_collection.find({}).toArray();
+           const result = await Booking_info_collection.find({}).toArray();
            res.send(result);
       })
 
