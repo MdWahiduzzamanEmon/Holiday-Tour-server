@@ -16,68 +16,78 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-console.log(uri);
 
 async function run() {
   try {
     await client.connect();
     const database = client.db("Holiday");
-      const tour_place_collection = database.collection("tour_place");
-      const Booking_info_collection=database.collection("Booking_info");
-    
-      //get all api
-      app.get("/tours", async (req, res) => {
-          const result = await tour_place_collection.find({}).toArray();
-          res.send(result);
-      })
-    //post in all api 
-    app.post('/destination', async (req, res) => {
+    const tour_place_collection = database.collection("tour_place");
+    const Booking_info_collection = database.collection("Booking_info");
+    const Message_collection = database.collection("Message");
+    const comment_collection = database.collection("comment");
+
+    //get all api
+    app.get("/tours", async (req, res) => {
+      const result = await tour_place_collection.find({}).toArray();
+      res.send(result);
+    });
+    //post in all api
+    app.post("/destination", async (req, res) => {
       const doc = req.body;
       const result = await tour_place_collection.insertOne(doc);
+      res.json(result);
+    });
+    //get one tour_place
+    app.get("/tourLocation/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await tour_place_collection.findOne(query);
+      res.send(result);
+    });
+    //post on data
+    app.post("/bookingInfo", async (req, res) => {
+      const result = await Booking_info_collection.insertOne(req.body);
+      res.json(result);
+    });
+    //post  message
+    app.post("/message", async (req, res) => {
+      const result = await Message_collection.insertOne(req.body);
+      res.json(result);
+    });
+    //post  comment
+    app.post("/comment", async (req, res) => {
+      const result = await comment_collection.insertOne(req.body);
+      res.json(result);
+    });
+    //get comment
+    app.get('/comments', async (req, res) => {
+      const result = await comment_collection.find({}).toArray();
       res.json(result)
     })
-//get one tour_place 
-      app.get('/tourLocation/:id', async (req, res) => {
-          const id = req.params.id;
-          const query = { _id: ObjectId(id) };
-          const result = await tour_place_collection.findOne(query);
-          console.log(result);
-          res.send(result);
-      })
-//post on data 
-      app.post('/bookingInfo', async (req, res) => {
-          console.log(req.body);
-          const result = await Booking_info_collection.insertOne(req.body);
-          console.log(result);
-          res.json(result)
-      })
 
-//get booking api
-      app.get('/bookingInfo/:email', async (req, res) => {
-          const email = req.params.email;
-        //   console.log(email);
-          const query = { email: email };
-          const result = await Booking_info_collection.find(query).toArray();
-        // console.log(result);
+    //get booking api
+    app.get("/bookingInfo/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await Booking_info_collection.find(query).toArray();
+      res.send(result);
+    });
 
-          res.send(result)
-      })
+    //get all booking
+    app.get("/bookingInfo", async (req, res) => {
+      const result = await Booking_info_collection.find({}).toArray();
+      res.send(result);
+    });
 
-//get all booking 
-      app.get('/bookingInfo', async (req, res) => {
-           const result = await Booking_info_collection.find({}).toArray();
-           res.send(result);
-      })
-
-//delete booking 
-      app.delete('/bookingDelete/:id', async (req, res) => {
-          const id = req.params.id;
-          const query = { _id: ObjectId(id) };
-          const result = await Booking_info_collection.deleteOne(query);
-          res.json(result)
-      })
-//update status  api
-    app.put('/status/:id', async (req, res) => {
+    //delete booking
+    app.delete("/bookingDelete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await Booking_info_collection.deleteOne(query);
+      res.json(result);
+    });
+    //update status  api
+    app.put("/status/:id", async (req, res) => {
       const id = req.params.id;
       const update = req.body;
       const filter = { _id: ObjectId(id) };
@@ -92,10 +102,8 @@ async function run() {
         updateDoc,
         options
       );
-      console.log(updateDoc, filter);
-      res.json(result)
-})
-      
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
