@@ -30,6 +30,12 @@ async function run() {
           const result = await tour_place_collection.find({}).toArray();
           res.send(result);
       })
+    //post in all api 
+    app.post('/destination', async (req, res) => {
+      const doc = req.body;
+      const result = await tour_place_collection.insertOne(doc);
+      res.json(result)
+    })
 //get one tour_place 
       app.get('/tourLocation/:id', async (req, res) => {
           const id = req.params.id;
