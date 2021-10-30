@@ -70,7 +70,25 @@ async function run() {
           const result = await Booking_info_collection.deleteOne(query);
           res.json(result)
       })
-
+//update status  api
+    app.put('/status/:id', async (req, res) => {
+      const id = req.params.id;
+      const update = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: update.status,
+        },
+      };
+      const result = await Booking_info_collection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(updateDoc, filter);
+      res.json(result)
+})
       
   } finally {
     // await client.close();
