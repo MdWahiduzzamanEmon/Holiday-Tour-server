@@ -31,6 +31,13 @@ async function run() {
       const result = await tour_place_collection.find({}).toArray();
       res.send(result);
     });
+    //delete data 
+    app.delete("/dataDelete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await tour_place_collection.deleteOne(query);
+      res.json(result)
+    })
     //post in all api
     app.post("/destination", async (req, res) => {
       const doc = req.body;
